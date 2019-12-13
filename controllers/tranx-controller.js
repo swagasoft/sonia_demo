@@ -30,8 +30,8 @@ confirmAccount = async (req, res)=> {
    await TranxModel.findOne({_id : accountId}, (err, document)=> {
         document.status = 'success';
         document.save().then(()=> {
-            console.log('THIS IS IT',document)
-            UserModel.updateOne({_id: document.user_id}, {amount : document.amount }).then(()=> {
+            console.log('THIS IS IT',document);
+            UserModel.updateOne({_id: document.user_id}, {$inc :{balance : document.amount}}).then(()=> {
                 res.status(200).send({message : 'sucesss'});
 
             })

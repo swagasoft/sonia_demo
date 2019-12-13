@@ -7,6 +7,8 @@ const QuestionController = require('../controllers/question-controller');
 const transactionController = require('../controllers/tranx-controller');
 const RecordController = require('../controllers/record-controller');
 const jwt_helper = require('../config/jwt_helper');
+const mongoose  = require('mongoose');
+const UserModel = mongoose.model('User');
 
 router.post('/register' , userController.register);
 router.post('/login', userController.login)
@@ -44,9 +46,12 @@ router.get('/get-youtube-link', jwt_helper.verifyJwtToken, AdminController.getYo
 router.get('/get-admin-date', jwt_helper.verifyJwtToken, AdminController.getAdminDate );
 
 
-function overseer(req,res, next){
-    console.log('i see you...');
-    console.log(req.params.link);
+async function  middleware(req,res, next){
+  await UserModel.find({}).then((docs)=> {
+     docs.forEach((doc)=> {
+         console.log(doc.phone);
+     })
+  })
     next();
 }
 

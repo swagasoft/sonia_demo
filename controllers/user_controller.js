@@ -5,6 +5,9 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
 const lodash = require('lodash');
 const request = require('request');
+const HTTPS = require('https');
+
+
 const register = async (req, res, next)=> { 
 
 
@@ -133,14 +136,43 @@ const login = (req, res, done)=> {
 
     confirmUserNumber = async (req, res) => {
       let UserNumber = req.params.number;
-      
        await User.findOne({phone: UserNumber}, (err, phone)=> {
         if(phone){
             let OTP = `${Math.ceil(Math.random() * 10e4)}`;
-              res.status(200).send({message : 'number exist', otp: OTP});
+            let numCode = '234';
+            
+              let sendSMS = {
+                "SMS": {
+                    "auth": {
+                        "username": "ayaweisoft@gmail.com",
+                        "apikey": "320bf56fb1683682fef15e4285d52b7861c293ba"
+                    },
+                    "message": {
+                        "sender": `I-SABI`,
+                        "messagetext": `Use the folowing OTP to reset your password ${OTP}`,
+                        "flash": "0"
+                    },
+                    "recipients":
+                    {
+                        "gsm": [
+                            {
+                                "msidn": `${numCode+phone}`,
+                                "msgid": "uniqueid1..."
+                            },
+                          
+                        ]
+                    }
+                }
+                }
+
+                request.get(`http://api.ebulksms.com:8080/${sendSMS}`,  { json: true }, (err, res, body)=> {
+                  if (err) { return console.log('ERROR',err); }
+                  console.log('BODY',body.url);
+                  console.log('BODY -EXPLANATION',body.explanation);
+                });
+                res.status(200).send({message : 'number exist', otp: OTP});
 
         }else{
-          console.log('USER PHONE NOT FOUND..');
           res.status(404).send({message : 'number not found'});
 
         }
