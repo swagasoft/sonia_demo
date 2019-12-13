@@ -22,6 +22,9 @@ var tranxSchema = mongoose.Schema({
     amount : {
         type: Number
     },
+    mobile_amount : {
+        type: Number
+    },
     trax : {
         type: String
     },

@@ -21,6 +21,7 @@ router.get('/get-single-question:id', jwt_helper.verifyJwtToken,QuestionControll
 router.get('/delete-question:id',jwt_helper.verifyJwtToken,QuestionController.deleteQuestion);
 router.post('/update-question', jwt_helper.verifyJwtToken, QuestionController.updateQuestion);
 router.post('/submit-transaction',  jwt_helper.verifyJwtToken, transactionController.Transaction );
+router.post('/submit-manual-transaction', jwt_helper.verifyJwtToken, transactionController.manualTrans);
 router.get('/get-account-balance', jwt_helper.verifyJwtToken, transactionController.loadBalance);
 router.get('/get-random-questions-for-game',jwt_helper.verifyJwtToken,QuestionController.getQuestionsForGame);
 router.post('/save-user-profile', jwt_helper.verifyJwtToken, userController.saveUserprofile);
@@ -35,6 +36,7 @@ router.get('/game-fun-fact-tips', jwt_helper.verifyJwtToken,QuestionController.g
 router.get('/confirm-user-number:number',  userController.confirmUserNumber);
 router.get('/get-my-transaction', jwt_helper.verifyJwtToken, transactionController.getMyTransaction);
 router.get('/confirm-user-otp:otp', userController.confirmUserOtp);
+
 
 // admin routes section
 router.post('/post-question', AdminController.postQuestion);

@@ -3,6 +3,21 @@ const TranxModel = mongoose.model('Tranx');
 const UserModel = mongoose.model('User');
 
 
+manualTrans = async (req, res) => {
+    console.log(req.body);
+    var Tranx = new TranxModel();
+    Tranx.user_id = req._id;
+    Tranx.account_id = req.body.account_id;
+    Tranx.username = req.body.username;
+    Tranx.status = req.body.status;
+    Tranx.trax = req.body.transaction;
+    Tranx.ref = req.body.trxref;
+    Tranx.mobile_amount = req.body.amount;
+    Tranx.save();
+
+    res.status(200).send({message : 'transaction saved...'});
+}
+
 Transaction = async (req, res) => {
     console.log(req.body);
     var Tranx = new TranxModel();
@@ -29,9 +44,9 @@ confirmAccount = async (req, res)=> {
     let accountId = req.params.id;
    await TranxModel.findOne({_id : accountId}, (err, document)=> {
         document.status = 'success';
-        document.save().then(()=> {
+        document.save().then(()=> { 
             console.log('THIS IS IT',document);
-            UserModel.updateOne({_id: document.user_id}, {$inc :{balance : document.amount}}).then(()=> {
+            UserModel.updateOne({_id: document.user_id}, {$inc :{balance : document.mobile_amount}}).then(()=> {
                 res.status(200).send({message : 'sucesss'});
 
             })
@@ -59,5 +74,5 @@ getMyTransaction = async ( req, res) => {
 
 
 
-module.exports = { Transaction, loadBalance, confirmAccount,
+module.exports = { Transaction, loadBalance, manualTrans, confirmAccount,
     getManualTransaction, getMyTransaction}
